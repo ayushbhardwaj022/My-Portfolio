@@ -466,3 +466,19 @@ body.light-mode footer{
 body.light-mode #contact a{
     color:#0284c7;
 }
+/* ===========================
+   TYPING ANIMATION FIX
+=========================== */
+
+/* Stable container for typing text */
+#typing {
+  display: inline-block;
+  min-width: 200px;   /* adjust based on longest text */
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+/* Prevent vertical jump in heading */
+.hero-text h2 {
+  min-height: 1.5em;  /* keeps line height stable */
+}
