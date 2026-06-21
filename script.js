@@ -1,7 +1,6 @@
 /* ==========================================
-TYPING ANIMATION
+   1. TYPING ANIMATION EFFECT
 ========================================== */
-
 const texts = [
   "ASP.NET Developer",
   "Web Developer",
@@ -30,14 +29,16 @@ function typeText() {
   }
 }
 
+// Initialize Typing on Load
 typeText();
 
-/* ==========================================
-SCROLL REVEAL ANIMATION
-========================================== */
 
+/* ==========================================
+   2. SCROLL REVEAL ANIMATION (CARDS)
+========================================== */
 const cards = document.querySelectorAll(".card, .project-card");
 
+// Set Initial States
 cards.forEach((card) => {
   card.style.opacity = "0";
   card.style.transform = "translateY(50px)";
@@ -59,26 +60,31 @@ function revealCards() {
 window.addEventListener("scroll", revealCards);
 revealCards();
 
-/* ==========================================
-NAVBAR SHADOW
-========================================== */
 
+/* ==========================================
+   3. DYNAMIC NAVBAR SHADOW
+========================================== */
 const nav = document.querySelector("nav");
 
 window.addEventListener("scroll", () => {
   if (!nav) return;
 
   if (window.scrollY > 50) {
-    nav.style.boxShadow = "0 10px 30px rgba(0,0,0,0.3)";
+    // Dynamic shadow adjustment based on Active Theme Mode
+    if (document.body.classList.contains("light-mode")) {
+      nav.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.06)";
+    } else {
+      nav.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.3)";
+    }
   } else {
     nav.style.boxShadow = "none";
   }
 });
 
-/* ==========================================
-ACTIVE NAV LINK
-========================================== */
 
+/* ==========================================
+   4. ACTIVE NAVBAR LINK HIGHLIGHTER
+========================================== */
 const sections = document.querySelectorAll("section");
 const navLinks = document.querySelectorAll("nav ul li a");
 
@@ -106,49 +112,58 @@ window.addEventListener("scroll", () => {
   });
 });
 
-/* ==========================================
-PROFILE IMAGE GLOW
-========================================== */
 
+/* ==========================================
+   5. PROFILE IMAGE INTERACTIVE GLOW
+========================================== */
 const profile = document.querySelector(".hero-img img");
 
 if (profile) {
   profile.addEventListener("mouseenter", () => {
-    profile.style.boxShadow =
-      "0 0 30px #38bdf8, 0 0 80px rgba(56,189,248,.6)";
+    if (document.body.classList.contains("light-mode")) {
+      profile.style.boxShadow = "0 10px 30px rgba(2, 132, 199, 0.25)";
+    } else {
+      profile.style.boxShadow = "0 0 30px #38bdf8, 0 0 80px rgba(56, 189, 248, 0.6)";
+    }
   });
 
   profile.addEventListener("mouseleave", () => {
-    profile.style.boxShadow = "0 0 25px #38bdf8";
+    if (document.body.classList.contains("light-mode")) {
+      profile.style.boxShadow = "0 10px 25px rgba(2, 132, 199, 0.15)";
+    } else {
+      profile.style.boxShadow = "0 0 25px #38bdf8";
+    }
   });
 }
 
-/* ==========================================
-SCROLL TO TOP BUTTON
-========================================== */
 
+/* ==========================================
+   6. SCROLL TO TOP UTILITY BUTTON
+========================================== */
 const scrollBtn = document.createElement("button");
 scrollBtn.innerHTML = "↑";
 scrollBtn.id = "topBtn";
 
 document.body.appendChild(scrollBtn);
 
+// Dynamic injected button style
 scrollBtn.style.cssText = `
-position: fixed;
-bottom: 20px;
-right: 20px;
-width: 45px;
-height: 45px;
-border: none;
-border-radius: 50%;
-background: #38bdf8;
-color: white;
-font-size: 22px;
-cursor: pointer;
-display: none;
-z-index: 1000;
-box-shadow: 0 5px 20px rgba(56,189,248,.4);
-transition: .3s;`;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background: #38bdf8;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 5px 20px rgba(56, 189, 248, 0.4);
+  transition: .3s;
+`;
 
 window.addEventListener("scroll", () => {
   if (window.scrollY > 400) {
@@ -165,15 +180,28 @@ scrollBtn.addEventListener("click", () => {
   });
 });
 
-/* ==========================================
-DARK/LIGHT MODE TOGGLE
-========================================== */
 
+/* ==========================================
+   7. DARK/LIGHT MODE TOGGLE & VANTA OPTIMIZATION
+========================================== */
 const themeBtn = document.getElementById("theme-toggle");
 
-if (themeBtn) {
+// Manage Vanta Canvas Visibility depending on theme requirements
+function handleVantaVisibility() {
+  const vantaCanvas = document.querySelector(".vanta-canvas");
+  if (vantaCanvas) {
+    if (document.body.classList.contains("light-mode")) {
+      vantaCanvas.style.opacity = "0";
+      vantaCanvas.style.visibility = "hidden";
+    } else {
+      vantaCanvas.style.opacity = "1";
+      vantaCanvas.style.visibility = "visible";
+    }
+  }
+}
 
-  // Saved theme load
+if (themeBtn) {
+  // LocalStorage Preference Validation
   if (localStorage.getItem("theme") === "light") {
     document.body.classList.add("light-mode");
     themeBtn.innerHTML = "🌙";
@@ -181,6 +209,10 @@ if (themeBtn) {
     themeBtn.innerHTML = "☀️";
   }
 
+  // Handle Canvas state on clean system load
+  setTimeout(handleVantaVisibility, 100);
+
+  // Core Toggle Click Mechanism
   themeBtn.addEventListener("click", () => {
     document.body.classList.toggle("light-mode");
 
@@ -191,6 +223,25 @@ if (themeBtn) {
       localStorage.setItem("theme", "dark");
       themeBtn.innerHTML = "☀️";
     }
-  });
 
+    // Trigger UI Refresh for Background Canvas
+    handleVantaVisibility();
+  });
 }
+
+
+/* ==========================================
+   8. VANTA GLOBE ENGINE INITIALIZATION
+========================================== */
+VANTA.GLOBE({
+  el: "body",
+  mouseControls: true,
+  touchControls: true,
+  gyroControls: false,
+  minHeight: 200,
+  minWidth: 200,
+  color: 0x38bdf8,
+  color2: 0x0ea5e9,
+  backgroundColor: 0x020617,
+  size: 1.1
+});
